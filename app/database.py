@@ -1,7 +1,13 @@
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase, declared_attr, mapped_column
 from typing import Annotated
+from datetime import datetime
+
+from fastapi import Depends
+from sqlalchemy import func
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs
+from sqlalchemy.orm import (
+    DeclarativeBase, Mapped, declared_attr, mapped_column
+)
 
 from app.config import settings
 
@@ -22,9 +28,17 @@ async def get_db():
         yield session
 
 
+DB_SESSION = Annotated[AsyncSession, Depends(get_db)]
+
+
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
 str_null = Annotated[str, mapped_column(nullable=True)]
+created_at = Annotated[datetime, mapped_column(server_default=func.now())]
+updated_at = Annotated[datetime, mapped_column(
+    server_default=func.now(),
+    onupdate=datetime.now
+)]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -33,3 +47,6 @@ class Base(AsyncAttrs, DeclarativeBase):
     @declared_attr.directive
     def __tablename__(cls) -> str:
         return f"{cls.__name__.lower()}s"
+
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
