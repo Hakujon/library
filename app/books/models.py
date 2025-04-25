@@ -14,7 +14,7 @@ class Book(Base):
         ForeignKey("authors.id"), nullable=False
     )
     author: Mapped["Author"] = relationship(
-        "Author", back_populates="students"
+        "Author"
     )
 
     def __str__(self):

@@ -9,7 +9,8 @@ class Settings(BaseSettings):
     DB_NAME: str
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).parent.parent / ".env"
+        env_file=Path(__file__).parent.parent / ".env",
+        extra="ignore"
     )
 
     def get_db_url(self):
