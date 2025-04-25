@@ -12,3 +12,8 @@ wheels/
 
 #environment
 .env
+
+
+#docker files
+pgadmin-data/
+postgres-data/
