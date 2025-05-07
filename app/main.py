@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from app.books.routes import router_books
+from app.users.routes import router as router_users
 
 
 app = FastAPI()
@@ -14,3 +15,4 @@ async def root():
 
 
 app.include_router(router_books)
+app.include_router(router_users)

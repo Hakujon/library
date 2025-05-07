@@ -11,7 +11,7 @@ from alembic import context
 
 from app.database import Base, DATABASE_URL
 from app.books.models import Book, Author
-
+from app.users.models import User
 
 BASE_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE_DIR))
