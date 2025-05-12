@@ -45,9 +45,24 @@ async def create_book(book: BookCreate, db_session: DB_SESSION):
     }
 
 
-@router_books.put("/{book_id}")
-async def rework_book()
+@router_books.patch("/{book_id}")
+async def rework_book(
+    book_id: int,
+    new_book: BookCreate,
+    db_session: DB_SESSION
+        ):
 
+    book_to_rework = await BookDAO.find_one_by_id(db_session, book_id)
+    updated_data_dict = new_book.model_dump()
+    for key, value in updated_data_dict.items():
+        setattr(book_to_rework, key, value)
+
+    await db_session.commit()
+    await db_session.refresh(book_to_rework)
+    return {
+        "message": f"Book {book_id} was changed",
+        "book": BookResponse.model_validate(book_to_rework)
+    }
 
 
 @router_books.get("/authors", response_model=list[AuthorResponse])
@@ -74,7 +89,7 @@ async def get_author_by_id(
 
 @router_books.post("/authors")
 async def create_author(author: AuthorCreate, db_session: DB_SESSION):
-    author_to_db = AuthorDAO.add(
+    author_to_db = await AuthorDAO.add(
         session=db_session,
         **author.model_dump()
     )

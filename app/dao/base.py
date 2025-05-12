@@ -36,7 +36,6 @@ class BaseDAO:
         await session.refresh(new_instance)
         return new_instance
 
-
     @classmethod
     async def update_data(cls, session: AsyncSession, filter_by, **values):
         query = (
@@ -52,9 +51,17 @@ class BaseDAO:
             raise e
         return result.rowcount
 
-
     @classmethod
     async def delete_data(cls, session: AsyncSession, data_id):
         query = (
-
+            delete(cls.model).
+            filter_by(id=data_id)
         )
+        await session.execute(query)
+        try:
+            await session.commit()
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e
+        return {"message":
+                "data was deleted"}

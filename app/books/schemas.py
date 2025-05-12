@@ -25,6 +25,19 @@ class BookCreate(BookBase):
     pass
 
 
+class BookUpdate(BookBase):
+    name: Optional[str] = Field(None, description="Название книги")
+    date_publication: Optional[date] = Field(
+        None,
+        description="Дата публикации книги"
+    )
+    author_id: Optional[int] = Field(
+        None,
+        ge=1,
+        description="ID автора книги"
+    )
+
+
 class AuthorCreate(AuthorBase):
     pass
 
