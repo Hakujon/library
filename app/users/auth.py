@@ -4,13 +4,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import EmailStr
 from jose import jwt
 from passlib.context import CryptContext
-
+from fastapi.security import OAuth2PasswordBearer
 from app.users.models import User
 from app.config import settings
 from app.users.dao import UsersDAO
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_password_hash(password: str) -> str:

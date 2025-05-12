@@ -12,7 +12,8 @@ class User(Base):
     password: Mapped[str]
     roles: Mapped[list["Role"]] = relationship(
         secondary="userroles",
-        back_populates="users"
+        back_populates="users",
+        lazy="selectin"
     )
 
     extend_existing = True
